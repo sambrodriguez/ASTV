@@ -211,7 +211,7 @@
 
 ;Tutorial Window
 
-(define tutFrame (new frame% [label "Input"] [width 800][height 300]))
+(define tutFrame (new frame% [label "Tutorial"] [width 800][height 300]))
 
 (define tutTitle (new message% [parent tutFrame]
                           [label "Welcome to the Abstract Syntax Tree Visualizer!"]))
@@ -247,7 +247,7 @@
                              [label "Best of luck to you, and thank you for using our program!"]))
 
 (new button% [parent start]
-             [label "Tutorial"]
+             [label "Help"]
              ; Callback procedure for a button click:
              [callback (lambda (button event)
                          (send tutFrame show #t))])
