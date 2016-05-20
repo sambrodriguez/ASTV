@@ -6,6 +6,13 @@
 (require (lib "eopl.ss" "eopl"))
 
 (define strh (file->string "help.txt"))
+(define strhlist (string-split strh))
+
+(define (for-each func lst)
+  (let loop ((rest lst))
+    (unless (null? rest)
+      (func (car rest))
+      (loop (cdr rest)))))
 
 (define treef (new frame% [label "Visualed Tree"][width 800][height 800]))
 
@@ -13,6 +20,7 @@
 
 (define canvasdraw2
   (lambda (canvas dc)
+    (send dc draw-text (send textbox get-value) 350 40)
     (program->extractor canvas dc (send textbox get-value))))
 
 (define start (new frame% [label "Input"] [width 800][height 800]))
@@ -52,7 +60,7 @@
 
 (define drawhelp
   (lambda (canvas dc)
-    (send dc draw-text strh 0 0)))
+               (send dc draw-text strh 0 0)))
 
 (define helptext (new canvas% [parent helpf]
                           [paint-callback drawhelp]))
