@@ -20,6 +20,10 @@
 
 (define canvasdraw2
   (lambda (canvas dc)
+     (send dc set-font (make-font #:size 14 #:family 'roman
+                             #:weight 'bold))
+    (send dc set-text-foreground "Dark Slate Blue")
+    (send dc draw-text  (format "~s" (run (send textbox get-value))) 350 60)
     (send dc draw-text (send textbox get-value) 350 40)
     (program->extractor canvas dc (send textbox get-value))))
 
