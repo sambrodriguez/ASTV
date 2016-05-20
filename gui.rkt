@@ -7,7 +7,7 @@
 
 (define strh (file->string "help.txt"))
 
-(define treef (new frame% [label "Visualed Tree"][width 800][height 800]))
+(define treef (new frame% [label "Visualized Tree"][width 800][height 800]))
 
 (define helpf (new frame% [label "Help Documentation"][width 600][height 600]))
 
