@@ -1,6 +1,7 @@
+;#lang eopl
 #lang racket
 (require (lib "eopl.ss" "eopl"))
-(require racket/gui/base)
+
 
 
 (define-datatype program program?
@@ -17,11 +18,7 @@
    (exp1 expression?)
    (exp2 expression?)
    (exp3 expression?))
-  #|
-  (let-exp
-   (var symbol?)
-   (exp1 expression?)
-   (body expression?))|#
+ 
   
   (add-exp
    (left expression?)
@@ -33,8 +30,8 @@
    (left expression?)
    (right expression?))
    (let-exp
-   (var  (list-of symbol?))                     ;names of arguments stored in a list
-   (value (list-of expression?))                ;values for each arguments stored in a list
+   (var   symbol?)                     ;names of arguments stored in a list
+   (value expression?)                ;values for each arguments stored in a list
    (body expression?))
   
   (Greater-than-exp
@@ -75,15 +72,14 @@
    (boolean boolean?))
   (proc-val 
    (proc proc?))
-  (var-val
-   (var symbol?))
+ 
   (emptylist-val)
   (cons-val (first expval?)(rest expval?)))
 
 (define expval->num
   (lambda (v)
     (cases expval v
-      (num-val (num) num)
+      (num-val (num)  num)
       (else (expval-extractor-error 'num v)))))
 
 (define expval->bool
@@ -209,7 +205,7 @@
     (expression
      ("<" "(" expression "," expression ")")
      Less-than-exp)
-    (expression ("let"  (arbno identifier "=" expression) "in" expression) let-exp)
+    (expression ("let"  identifier "=" expression "in" expression) let-exp)
     (expression
      ("equal?" "(" expression "," expression ")")
      equal?-exp)
@@ -248,7 +244,7 @@
   (lambda (exp env)
     (cases expression exp
       (const-exp (num) (num-val num))
-      (var-exp (var) (var-val var))
+      (var-exp (var) (apply-env env var))
       (diff-exp (exp1 exp2)
                 (let ((val1 (value-of exp1 env))
                       (val2 (value-of exp2 env)))
@@ -331,20 +327,20 @@
                   (cons-val val1 val2)))
       (car-exp (exp1 exp2)
                (let ((val1 (value-of exp1 env)))
-                 (expval->car val1)))
+                 (expval->num val1)))
       (cdr-exp (exp1 exp2)
                (let ((val1 (value-of exp2 env)))
-                 (expval->cdr val1)))
+                 (expval->num val1)))
       (null?-exp (exp1)
                  (let ((val1 (value-of exp1 env)))
                    (let ((bool1 (expval->emptylist? val1)))
                      (bool-val bool1))))
       (emptylist-exp ()
                      (emptylist-val))
-      (let-exp (vars vals body)
-             (value-of body (extend-env* vars
-                                         (map (curryr value-of env) vals)
-                                         env)))
+     (let-exp (var exp1 body)
+              (let ((val1 (value-of exp1 env)))
+                (value-of body 
+                          (extend-env var val1 env))))
       )))
 
 (define eval-cond
@@ -353,11 +349,12 @@
       ((null? l-exp1) "no true test case")
       ((expval->bool (value-of (car l-exp1) env))(value-of (car l-exp2) env))
       (else (eval-cond (cdr l-exp1) (cdr l-exp2) env)))))
+
 (define apply-procedure          
-  (lambda (proc1 vals)
+  (lambda (proc1 val)
     (cases proc proc1
-      (procedure (vars body saved-env)
-                 (value-of body (extend-env* vars vals saved-env))))))
+      (procedure (var body saved-env)
+                 (value-of body (extend-env var val saved-env))))))
 #|
 (define apply-procedure
   (lambda (proc1 val)
@@ -382,18 +379,14 @@
    (var symbol?)
    (val expval?)
    (env environment?))
-  (extend-env-rec
-   (fnames  (list-of symbol?))
-   (fargs  (list-of(list-of symbol?)))
-   (fbodies  (list-of expression?))
-   (env environment?)))
+  )
 
-(define (extend-env* vars vals env)
+#|(define (extend-env* vars vals env)
   (if (null? vars)
       env
       (extend-env* (cdr  vars)
                    (cdr  vals)
-                   (extend-env (car vars) (car vals) env))))
+                   (extend-env (car vars) (car vals) env))))|#
 
 (define (apply-env env search-var)
   (cases environment env
@@ -402,10 +395,10 @@
     (extend-env (saved-var saved-val saved-env)
                 (if (eqv? search-var saved-var)
                     saved-val
-                    (apply-env saved-env search-var)))
+                    (apply-env saved-env search-var)))))
    
     
-    (extend-env-rec (fnames fargs fbodies saved-env)
+   #| (extend-env-rec (fnames fargs fbodies saved-env)
                     (let loop ((fnames fnames)
                                 (fargs fargs)
                                 (fbodies fbodies))
@@ -414,7 +407,7 @@
                             ((eqv? search-var (car fnames))
                              (proc-val (procedure (car fargs) (car fbodies) env)))
                             (else
-                             (loop (cdr fnames) (cdr fargs) (cdr fbodies))))))))
+                             (loop (cdr fnames) (cdr fargs) (cdr fbodies))))))))|#
 (provide (all-defined-out))
 ;(define var? symbol?)
 ;(define scheme-value? (lambda (s) #t))
@@ -432,4 +425,7 @@
              (let-exp (var exp1 body)"let-exp"(exp->extractor exp1)(exp->extractor body))
              (add-exp (exp1 exp2) "add-exp"(exp->extractor exp1) (exp->extractor exp2))
              (mult-exp (exp1 exp2) "mult-exp"(exp->extractor exp1)(exp->extractor exp2))
+
              (div-exp (exp1 exp2) "Div-exp" (exp->extractor exp1)(exp->extractor exp2))))))|#
+
+
