@@ -1,0 +1,8 @@
+This is the program where you get to visualize abstract syntax trees in exchange for entering the concrete syntax into the textbox, and pressing the Draw Tree button.
+Our program currently supports the LET language from the book, as well as the Proc language from EOPL. For example, try entering the following into the textbox, without quotes: let x = 5 in -(x,3)"]))
+If you entered it correctly, you will see a tree! Congratulations! You have successfully run the program.
+Notice that in addition to the tree, there is also black text that shows the result of evaluation of your entered program
+Now that you know how to run the program, try a few harder examples. Here are a few to choose from
+let f = proc(x) +(x,5) in (f 6)
+(proc(x) +(x,5) 10)
+Best of luck to you, and thank you for using our program!
