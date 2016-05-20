@@ -1,1 +1,0 @@
-("6.4" ("2d4059e5c1e6df0db9525cad86fb8d4aeb353337" . "7b0213d7a42b5bb8d28c77517dca04db8ed6559c") #"/Users/Penelope/astv/defined.rkt" (collects #"eopl" #"eopl.rkt") (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"gui" #"base.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

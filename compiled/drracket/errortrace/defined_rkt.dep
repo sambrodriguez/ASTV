@@ -1,1 +1,0 @@
-("6.4" ("7ec4d0c827731e794e3f6fa7bec2b1c81b6073f4" . "78dc0afb5685f95b375450a08307e72444ddca4e") (collects #"eopl" #"eopl.rkt") (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"gui" #"base.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))
